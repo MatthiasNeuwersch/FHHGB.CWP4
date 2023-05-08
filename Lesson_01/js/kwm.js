@@ -40,6 +40,7 @@ class KWM_Translator{
     }
 }
 let translator = new KWM_Translator("de", "en", "ru");
+window.translator = translator;
 console.log(translator.translate("hello_world"));
 console.log(translator.translate("it_is_me", "en"));
 translator.currentLanguage = "ru";

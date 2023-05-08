@@ -5,13 +5,15 @@
  *
  *     You - 2022-03-14
  **********************************************************************/
-//1.) Translator
+//region Translator
+
+//Resource Strings:
 const KWM_Resources = {
     "de": {
         hello_world: "Hallo Welt",
         it_is_me: "Ich bin's",
-        my_name_is : "Mein Name ist",
-        age : "Alter"
+        my_name_is: "Mein Name ist",
+        age: "Alter",
     },
     "en": {
         hello_world: "Hello world",
@@ -22,11 +24,10 @@ const KWM_Resources = {
     "ru": {
         hello_world: "Здравствуйте мир",
         it_is_me: "Это я",
-        my_name_is: "Меня зовут",
-        age: "Возраст",
+        my_name_is: "Меня Совут",
+        age: "Сколко лет",
     }
 };
-
 class KWM_Translator{
     constructor(...languages){
         for(const lng of languages)
@@ -35,10 +36,16 @@ class KWM_Translator{
     }
 
     translate(key, language = this.currentLanguage){
-        return isEmpty(this[language][key]) ? "--Missing translation: "+key+"--" : this[language][key];
+        return isEmpty(this[language][key]) ? "--Missing translation: "+key+"--": this[language][key];
     }
 }
-
+let translator = new KWM_Translator("de", "en", "ru");
+window.translator = translator;
+console.log(translator.translate("hello_world"));
+console.log(translator.translate("it_is_me", "en"));
+translator.currentLanguage = "ru";
+console.log(translator.translate("hello_world"));
+console.log(translator.translate("non_existing_key", "en"));
 /*
 Example-Code for Testing:
 
@@ -56,56 +63,49 @@ It's me
 Здравствуйте мир
 --Missing translation: non_existing_key--
  */
+//endregion
 
-//2.) Templating
+//region Templating
 function renderTemplate(template, container, values={}){
-    let rendered = template,
-        translations = /<%>/gi,
-        data = /<&>/gi,
-        result,
-        translations_open = [],
-        translations_close = [],
-        data_open = [],
-        data_close = [],
-        even = true;
+    //Okay, let's get some regex!
+    let translationsRegex = /<%>(.*?)<%>/gi;
+    let dataRegex= /<&>(.*?)<&>/gi;
+    let translations = [];
+    let data = [];
 
-    while(result = data.exec(template)){
-        even ? data_open.push(result.index): data_close.push(result.index);
-        even = !even;
-    }
-    for(let i = 0; i < data_open.length; i++){
-        let data = values[(template.substring(data_open[i]+3, data_close[i]))];
-        rendered = rendered.replace(template.substring(data_open[i], data_close[i]+3), data);
-    }
-
-    even = true;
-    while(result = translations.exec(template)){
-        even ? translations_open.push(result.index) : translations_close.push(result.index);
-        even = !even;
-    }
-    console.log(translations_close);
-    for(let i = 0; i < translations_open.length; i++){
-        let translation = translator.translate(template.substring(translations_open[i]+3, translations_close[i]));
-        rendered = rendered.replace(template.substring(translations_open[i], translations_close[i]+3), translation);
-    }
+    //At first, the values
+    let rendered = findEscapings(dataRegex, data, "fill", template);
+    //Then the translations
+    rendered = findEscapings(translationsRegex, translations, "translate", rendered);
     container.innerHTML = rendered;
-    window.dispatchEvent(new CustomEvent("templateRendered"));
+
+    function findEscapings(regex, array, mode, template){
+        let rendered = template;
+        let result;
+        while(result = regex.exec(template)){
+            let replacement = (mode === "translate") ? translator.translate(result[1]) : values[result[1]];
+            rendered = rendered.replace(template.substring(result.index, result.index+result[1].length+6), replacement);
+        }
+        return rendered;
+    }
 }
 
+const template = "<p><%>my_name_is<%> <&>my_name<&>.</p><p><%>age<%>: <&>my_age<&></p>";
+const container = document.getElementById("target_for_template"); //You can find this container in your index.html
+const values = {my_name: "Ronald McDonald", my_age: 45};
+translator.currentLanguage = "en";
+renderTemplate(template, container, values);
 
-/*
-Example-Code for Testing: */
-
+/* Testscript
 const template = "<p><%>my_name_is<%> <&>my_name<&>.</p><p><%>age<%>: <&>my_age<&></p>";
 const container = document.getElementById("target_for_template"); //You can find this container in your index.html
 const values = {my_name: "Ronald McDonald", my_age: 45};
 
 renderTemplate(template, container, values);
+*/
+//endregion
 
-
-
-
-//3.) Useful JS-Functions
+//region Useful JS-Functions
 
 function isEmpty(variable){
     if(Array.isArray(variable))
@@ -113,36 +113,18 @@ function isEmpty(variable){
     else if(typeof variable === "object")
         return (Object.entries(variable).length === 0 && variable.constructor === Object);
     else
-        return (typeof variable === "undefined" || variable == null || variable === "");
+        return(typeof variable === "undefined" || variable == null || variable === "");
 }
-
 function getOS(){
-    let device = "Unknown Device";
-    if(navigator.appVersion.indexOf("Win")!=-1) device = "Windows";
-    if(navigator.appVersion.indexOf("Mac")!=-1) device = "MacOS"; //iPad Pro & iPhone 6 :)
-    if(navigator.appVersion.indexOf("Android")!=-1) device = "Android";
-    if(navigator.appVersion.indexOf("iOS")!=-1) device = "iOS";
-    return device;
+
 }
 
 function clientHasCamera(){
-    navigator.getMedia = ( navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
-    navigator.getMedia({video: true}, function(stream) {
-        stream.getTracks().forEach(function(track) {
-            track.stop();
-        });
-        return true;
-    }, function() {
-        return false;
-    });
+
 }
 
 function getIndexOfObjectInArrayByPropertyvalue(array, property, value){
-    for(let i = 0; i < array.length; i++) {
-        if(array[i][property] === value)
-            return i;
-    }
-    return -1;
+
 }
 
 /*
@@ -151,3 +133,5 @@ const students = [ { name: "John", age: 20 }, { name: "Irina", age: 19 }, { name
 
 let result = getIndexOfObjectInArrayByPropertyvalue(students, "name", "Irina");
 //Expected result: 1
+
+//endregion
