@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--  <script>-->
+<!--    //Problem-->
+<!--    const api = "https://api.neuwersch.kwmhgb.at/wp-json/acf/v3/kwm_pet"-->
+<!--    const getPets = function(callback){-->
+<!--      const request = new XMLHttpRequest();-->
+
+<!--      request.onreadystatechange = function() {-->
+<!--        if (request.readyState === 4){-->
+<!--            console.log(request.response);-->
+<!--            return request.response;-->
+<!--        }-->
+<!--      }-->
+
+<!--      request.open('GET', api);-->
+<!--      request.send();-->
+<!--    }-->
+<!--    const fetchPets = function(){-->
+<!--        let pets = getPets();-->
+<!--        console.log(pets);-->
+<!--        console.log("asdf");-->
+<!--    }-->
+
+<!--    fetchPets();-->
+<!--  </script>-->
+
+
+<!--  <script>-->
+<!--    //CALLBACK-->
+<!--    const api = "https://api.neuwersch.kwmhgb.at/wp-json/acf/v3/kwm_pet"-->
+
+
+<!--    const getPets = function(callback){-->
+<!--      const request = new XMLHttpRequest();-->
+
+<!--      request.onreadystatechange = function() {-->
+<!--        if (request.readyState === 4)-->
+<!--           callback(request);-->
+<!--      }-->
+
+<!--      request.open('GET', api);-->
+<!--      request.send();-->
+<!--    }-->
+
+<!--    const myCallbackFunction = function(request){-->
+<!--      if (request.status == 200)-->
+<!--        console.dir(JSON.parse(request.response));-->
+<!--      else-->
+<!--        console.log("Oops! No Pets :(");-->
+<!--    }-->
+
+<!--    const fetchPets = function(){-->
+<!--        getPets(myCallbackFunction);-->
+<!--    }-->
+
+<!--    fetchPets();-->
+<!--  </script>-->
+
+
+<!--  <script>-->
+<!--    //Promises-->
+
+<!--    const api = "https://api.neuwersch.kwmhgb.at/wp-json/acf/v3/kwm_pet";-->
+<!--    const getPets = () => fetch(api).then(response => response.json());-->
+
+<!--    const fetchPets = function(){-->
+<!--        const promise = getPets();-->
+<!--        console.log(promise);-->
+<!--        promise.then(pets => console.log(pets));-->
+<!--    }-->
+
+<!--    fetchPets();-->
+<!--  </script>-->
+
+<!--<script>-->
+<!--    //ASYNC AWAIT-->
+<!--    const api = "https://api.neuwersch.kwmhgb.at/wp-json/acf/v3/kwm_pet";-->
+<!--    const getPets = () => fetch(api).then(response => response.json());-->
+
+<!--    const fetchPets = async function(){-->
+<!--        const promise = await getPets();-->
+<!--        console.log(promise);-->
+<!--    }-->
+<!--    fetchPets();-->
+
+<!--</script>-->
+</body>
+</html>
