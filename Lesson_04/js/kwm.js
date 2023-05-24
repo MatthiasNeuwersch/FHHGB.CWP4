@@ -23,7 +23,7 @@ class kwmJS{
         this.options = {
             appContainer: document.getElementById('kwmJS'),
             debugMode: true,
-            webRoot: "http://localhost:63342/FH-Hagenberg.CWP4.master/Lesson_004",
+            webRoot: window.location.origin + window.location.pathname
         };
         this.utils = KWM_Utils;
         this.model = new KWM_Model();
